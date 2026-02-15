@@ -16,7 +16,7 @@
       --ink:#0b1220;
       --muted:#4b5563;
 
-      --brand:#1d4ed8;       /* deep blue */
+      --brand:#1d4ed8;
       --brandDark:#163ea8;
 
       --line:rgba(11,18,32,.12);
@@ -44,7 +44,6 @@
       color: var(--ink);
     }
 
-    /* Header */
     .app-header{
       background: linear-gradient(90deg, #0b1220, #111c33);
       color:#fff;
@@ -72,7 +71,6 @@
       font-size: 1.02rem;
     }
 
-    /* Inputs */
     .search-input{
       border-radius: var(--radius);
       padding: 16px 16px;
@@ -81,7 +79,6 @@
       box-shadow: 0 10px 18px rgba(2,6,23,.04);
     }
 
-    /* Cards */
     .soft-card{
       background: var(--card);
       border: 1px solid var(--line);
@@ -104,7 +101,6 @@
       font-size: 1.05rem;
     }
 
-    /* Status badge */
     .status-badge{
       border-radius: 999px;
       padding: 10px 12px;
@@ -117,7 +113,6 @@
     .st-low{ background: var(--low-bg); color: var(--low-ink); }
     .st-empty{ background: var(--empty-bg); color: var(--empty-ink); }
 
-    /* Chips */
     .meta-row{
       margin-top: 12px;
       display: flex;
@@ -136,7 +131,6 @@
       font-size: 1rem;
     }
 
-    /* Pack controls */
     .pack-controls{
       display: grid;
       grid-template-columns: 62px 1fr 62px;
@@ -169,7 +163,56 @@
       background: #fff;
     }
 
-    /* Footer */
+    /* Variants */
+    .variant-row{
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(11,18,32,.10);
+      background: rgba(238,242,247,.55);
+    }
+
+    .variant-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-weight: 950;
+      margin-bottom: 10px;
+    }
+
+    .variant-size{
+      font-weight: 950;
+      font-size: 1.05rem;
+    }
+
+    .variant-controls{
+      display:grid;
+      grid-template-columns: 54px 1fr 54px;
+      gap: 10px;
+      align-items:center;
+    }
+
+    .btn-pack-sm{
+      border-radius: 16px;
+      font-weight: 950;
+      font-size: 1.2rem;
+      padding: 10px 0;
+      border: 1px solid rgba(11,18,32,.14);
+      background: #fff;
+      box-shadow: 0 10px 18px rgba(2,6,23,.07);
+    }
+
+    .variant-count{
+      text-align:center;
+      border-radius: 16px;
+      border: 1px solid rgba(11,18,32,.14);
+      padding: 10px 10px;
+      font-weight: 950;
+      font-size: 1.15rem;
+      background:#fff;
+    }
+
     .footer-bar{
       position: sticky;
       bottom: 0;
@@ -212,7 +255,6 @@
       font-weight: 750;
     }
 
-    /* Accordion */
     .accordion-button{
       border-radius: var(--radius) !important;
       font-weight: 950;
@@ -243,7 +285,6 @@
       padding: 12px 0 0 0;
     }
 
-    /* Admin buttons */
     .admin-actions{
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -263,7 +304,6 @@
       margin: 14px 0;
     }
 
-    /* Bigger touch targets */
     button, .accordion-button { -webkit-tap-highlight-color: transparent; }
 
     @media (orientation: landscape){
@@ -295,9 +335,9 @@
     <div class="mb-3">
       <input id="searchBox" class="form-control search-input"
              type="text"
-             placeholder="Search / தேடல் (ex: Jeera, முந்திரி, Oats)" />
+             placeholder="Search / தேடல் (ex: Jeera, முந்திரி, Toor Dal)" />
       <div class="mt-2 muted-note">
-        Packs rule: 3+ = Available | 1–2 = Low | 0 = Empty
+        Total packs rule: 3+ = Available | 1–2 = Low | 0 = Empty
       </div>
     </div>
 
@@ -417,7 +457,9 @@
             <div class="divider"></div>
 
             <div class="muted-note">
-              CSV columns required: <b>category,en,ta,packSize,packs</b>
+              CSV columns required: <b>category,en,ta,variantSize,packs</b>
+              <br>
+              (Same item name rows will merge into 1 card)
             </div>
           </div>
         </div>
@@ -439,49 +481,43 @@
         </div>
 
         <div class="modal-body">
+
           <div class="row g-3">
             <div class="col-12">
               <label class="form-label fw-bold">Category</label>
-              <select id="fCategory" class="form-select search-input">
-                <option value="Masala">Masala</option>
-                <option value="Dry Fruits">Dry Fruits</option>
-                <option value="Cereals">Cereals</option>
-                <option value="Tea/Coffee">Tea/Coffee</option>
-                <option value="Basics">Basics</option>
-              </select>
+              <select id="fCategory" class="form-select search-input"></select>
             </div>
 
             <div class="col-12 col-md-6">
               <label class="form-label fw-bold">English Name</label>
-              <input id="fEn" class="form-control search-input" placeholder="Ex: Jeera (Cumin)" />
-              <div class="muted-note mt-2">
-                Tip: If it matches dictionary, Tamil auto fills.
-              </div>
+              <input id="fEn" class="form-control search-input" placeholder="Ex: Sakthi Chicken Masala" />
             </div>
 
             <div class="col-12 col-md-6">
               <label class="form-label fw-bold">Tamil Name</label>
-              <input id="fTa" class="form-control search-input" placeholder="Ex: சீரகம்" />
-              <div class="muted-note mt-2">
-                Tip: If it matches dictionary, English auto fills.
-              </div>
-            </div>
-
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-bold">Pack Size</label>
-              <input id="fPackSize" class="form-control search-input" placeholder="Ex: 1 kg / 250 g / 500 ml" />
-            </div>
-
-            <div class="col-12 col-md-6">
-              <label class="form-label fw-bold">Pack Count</label>
-              <input id="fPacks" type="number" min="0" class="form-control search-input" placeholder="Ex: 5" />
+              <input id="fTa" class="form-control search-input" placeholder="Ex: சக்தி சிக்கன் மசாலா" />
             </div>
           </div>
 
           <div class="divider"></div>
 
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <div class="fw-bold fs-5">📦 Pack Sizes</div>
+            <button class="btn btn-outline-brand btn-mini" id="addVariantBtn" type="button">
+              ➕ Add Pack Size
+            </button>
+          </div>
+
+          <div class="muted-note mt-2">
+            Example: 100 g, 200 g, 1 kg
+          </div>
+
+          <div id="variantEditorWrap" class="mt-3"></div>
+
+          <div class="divider"></div>
+
           <div class="muted-note">
-            Pack Size is fixed. Only Pack Count changes daily.
+            Low rule uses TOTAL packs across all sizes.
           </div>
         </div>
 
@@ -509,7 +545,7 @@
     /**********************
      * STORAGE
      **********************/
-    const STORAGE_KEY_ITEMS = "vasantha_basket_items_pro_v1";
+    const STORAGE_KEY_ITEMS = "vasantha_basket_items_grouped_v1";
     const STORAGE_KEY_ADMIN = "vasantha_basket_admin_unlocked_v1";
     const ADMIN_PIN = "1234";
 
@@ -518,39 +554,26 @@
     }
 
     /**********************
-     * OFFLINE DICTIONARY (English <-> Tamil)
-     * Add more anytime
+     * DICTIONARY (English <-> Tamil)
      **********************/
     const DICT_EN_TO_TA = {
       "salt":"உப்பு",
-      "jaggery":"வெல்லம்",
       "jeera":"சீரகம்",
       "cumin":"சீரகம்",
       "pepper":"மிளகு",
-      "turmeric":"மஞ்சள் தூள்",
-      "chilli powder":"மிளகாய் தூள்",
-      "chili powder":"மிளகாய் தூள்",
-      "coriander powder":"கொத்தமல்லி தூள்",
-      "mustard":"கடுகு",
-      "mustard seeds":"கடுகு",
       "cashew":"முந்திரி",
-      "almond":"பாதாம்",
-      "kishmish":"உலர் திராட்சை",
-      "raisins":"உலர் திராட்சை",
       "oats":"ஓட்ஸ்",
-      "rava":"ரவை",
-      "poha":"அவல்",
-      "aval":"அவல்",
-      "tea powder":"தேயிலை தூள்",
-      "coffee powder":"காபி தூள்",
-      "corn flakes":"கார்ன் ஃப்ளேக்ஸ்"
+      "toor dal":"துவரம் பருப்பு",
+      "moong dal":"பாசி பருப்பு",
+      "urad dal":"உளுத்தம் பருப்பு",
+      "bay leaf":"பிரியாணி இலை",
+      "cloves":"லவங்கம்",
+      "fennel":"சோம்பு"
     };
 
-    // Reverse map
     const DICT_TA_TO_EN = {};
     Object.keys(DICT_EN_TO_TA).forEach(en => {
       const ta = DICT_EN_TO_TA[en];
-      // keep first english key only
       if(!DICT_TA_TO_EN[ta]) DICT_TA_TO_EN[ta] = en;
     });
 
@@ -560,17 +583,38 @@
         .trim()
         .toLowerCase()
         .replace(/\s+/g, " ")
-        .replace(/\(.*?\)/g, "") // remove brackets like (Cumin)
+        .replace(/\(.*?\)/g, "")
         .trim();
     }
 
     /**********************
-     * STATUS
+     * CATEGORIES
      **********************/
-    function getStatusFromPacks(packs){
-      packs = Number(packs || 0);
-      if(packs <= 0) return "empty";
-      if(packs <= 2) return "low";
+    const CATEGORY_ORDER = [
+      "Masala",
+      "Spices",
+      "Dals",
+      "Pulses/Beans",
+      "Rice",
+      "Basics",
+      "Household",
+      "Dry Fruits",
+      "Cereals",
+      "Tea/Coffee"
+    ];
+
+    /**********************
+     * STATUS (TOTAL PACKS)
+     **********************/
+    function getTotalPacks(item){
+      const vars = item.variants || [];
+      return vars.reduce((sum, v) => sum + Number(v.packs || 0), 0);
+    }
+
+    function getStatusFromTotal(total){
+      total = Number(total || 0);
+      if(total <= 0) return "empty";
+      if(total <= 2) return "low";
       return "available";
     }
 
@@ -581,13 +625,28 @@
     }
 
     /**********************
-     * DEFAULT ITEMS
+     * DEFAULT ITEMS (demo only)
      **********************/
     const DEFAULT_ITEMS = [
-      { id: uid(), category:"Basics", en:"Salt", ta:"உப்பு", packSize:"1 kg", packs:5 },
-      { id: uid(), category:"Masala", en:"Jeera (Cumin)", ta:"சீரகம்", packSize:"100 g", packs:2 },
-      { id: uid(), category:"Dry Fruits", en:"Cashew", ta:"முந்திரி", packSize:"250 g", packs:2 },
-      { id: uid(), category:"Cereals", en:"Oats", ta:"ஓட்ஸ்", packSize:"1 kg", packs:1 }
+      {
+        id: uid(),
+        category:"Masala",
+        en:"Sakthi Chicken Masala",
+        ta:"சக்தி சிக்கன் மசாலா",
+        variants:[
+          { id: uid(), size:"100 g", packs:5 },
+          { id: uid(), size:"200 g", packs:1 }
+        ]
+      },
+      {
+        id: uid(),
+        category:"Basics",
+        en:"Thool Uppu (Powder Salt)",
+        ta:"தூள் உப்பு",
+        variants:[
+          { id: uid(), size:"1 kg", packs:3 }
+        ]
+      }
     ];
 
     function loadItems(){
@@ -597,7 +656,14 @@
           localStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(DEFAULT_ITEMS));
           return structuredClone(DEFAULT_ITEMS);
         }
-        return JSON.parse(raw) || [];
+        const parsed = JSON.parse(raw) || [];
+        // Backward safe: ensure variants exist
+        return parsed.map(it => ({
+          ...it,
+          variants: Array.isArray(it.variants) && it.variants.length
+            ? it.variants.map(v => ({ id: v.id || uid(), size: v.size || "", packs: Number(v.packs||0) }))
+            : [{ id: uid(), size: it.packSize || "1 pack", packs: Number(it.packs||0) }]
+        }));
       }catch(e){
         localStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(DEFAULT_ITEMS));
         return structuredClone(DEFAULT_ITEMS);
@@ -647,16 +713,15 @@
     const fCategory = document.getElementById("fCategory");
     const fEn = document.getElementById("fEn");
     const fTa = document.getElementById("fTa");
-    const fPackSize = document.getElementById("fPackSize");
-    const fPacks = document.getElementById("fPacks");
+    const addVariantBtn = document.getElementById("addVariantBtn");
+    const variantEditorWrap = document.getElementById("variantEditorWrap");
 
     const toastEl = document.getElementById("appToast");
     const toastMsg = document.getElementById("toastMsg");
     const toast = new bootstrap.Toast(toastEl, { delay: 2200 });
 
-    let editingId = null;
-
-    const CATEGORY_ORDER = ["Masala", "Dry Fruits", "Cereals", "Tea/Coffee", "Basics"];
+    let editingItemId = null;
+    let editingVariants = [];
 
     /**********************
      * TOAST
@@ -684,9 +749,15 @@
       if(!q) return items;
 
       return items.filter(it => {
-        const hay = normalize(`${it.category} ${it.en} ${it.ta} ${it.packSize}`);
+        const total = getTotalPacks(it);
+        const variantText = (it.variants || []).map(v => `${v.size} ${v.packs}`).join(" ");
+        const hay = normalize(`${it.category} ${it.en} ${it.ta} ${variantText} ${total}`);
         return hay.includes(q);
       });
+    }
+
+    function ensureCategoriesInSelect(){
+      fCategory.innerHTML = CATEGORY_ORDER.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
     }
 
     /**********************
@@ -715,7 +786,8 @@
         let emptyCount = 0;
 
         list.forEach(it => {
-          const st = getStatusFromPacks(it.packs);
+          const total = getTotalPacks(it);
+          const st = getStatusFromTotal(total);
           if(st === "low") lowCount++;
           if(st === "empty") emptyCount++;
         });
@@ -769,10 +841,50 @@
     }
 
     function renderItemCard(it){
-      const packs = Number(it.packs || 0);
-      const st = getStatusFromPacks(packs);
+      const total = getTotalPacks(it);
+      const st = getStatusFromTotal(total);
       const meta = getStatusMeta(st);
       const admin = isAdminUnlocked();
+
+      const vars = it.variants || [];
+      const hasMultiple = vars.length >= 2;
+      const single = vars[0];
+
+      const variantsHtml = hasMultiple
+        ? vars.map(v => `
+            <div class="variant-row">
+              <div class="variant-head">
+                <div class="variant-size">📦 ${escapeHtml(v.size || "-")}</div>
+                <div class="meta-chip">Packs: ${Number(v.packs || 0)}</div>
+              </div>
+
+              <div class="variant-controls">
+                <button class="btn-pack-sm btn-minus"
+                        data-action="decVar"
+                        data-item="${it.id}"
+                        data-var="${v.id}">−</button>
+
+                <div class="variant-count">${Number(v.packs || 0)}</div>
+
+                <button class="btn-pack-sm btn-plus"
+                        data-action="incVar"
+                        data-item="${it.id}"
+                        data-var="${v.id}">+</button>
+              </div>
+            </div>
+          `).join("")
+        : `
+            <div class="meta-row">
+              <span class="meta-chip">📦 Pack: ${escapeHtml(single?.size || "-")}</span>
+              <span class="meta-chip">🧾 Total Packs: ${total}</span>
+            </div>
+
+            <div class="pack-controls">
+              <button class="btn-pack btn-minus" data-action="decVar" data-item="${it.id}" data-var="${single?.id}">−</button>
+              <div class="pack-count">${total}</div>
+              <button class="btn-pack btn-plus" data-action="incVar" data-item="${it.id}" data-var="${single?.id}">+</button>
+            </div>
+          `;
 
       return `
         <div class="col-12 col-md-6">
@@ -786,20 +898,16 @@
             </div>
 
             <div class="meta-row">
-              <span class="meta-chip">📦 Pack: ${escapeHtml(it.packSize || "-")}</span>
-              <span class="meta-chip">🧾 Packs: ${packs}</span>
+              <span class="meta-chip">🧾 Total Packs: ${total}</span>
+              ${hasMultiple ? `<span class="meta-chip">📦 Sizes: ${vars.length}</span>` : ``}
             </div>
 
-            <div class="pack-controls">
-              <button class="btn-pack btn-minus" data-action="dec" data-id="${it.id}">−</button>
-              <div class="pack-count">${packs}</div>
-              <button class="btn-pack btn-plus" data-action="inc" data-id="${it.id}">+</button>
-            </div>
+            ${variantsHtml}
 
             ${admin ? `
               <div class="admin-actions">
-                <button class="btn btn-outline-brand btn-mini" data-action="edit" data-id="${it.id}">✏️ Edit</button>
-                <button class="btn btn-outline-dark btn-mini" data-action="quickEmpty" data-id="${it.id}">Set 0</button>
+                <button class="btn btn-outline-brand btn-mini" data-action="editItem" data-item="${it.id}">✏️ Edit</button>
+                <button class="btn btn-outline-dark btn-mini" data-action="setAllZero" data-item="${it.id}">Set All 0</button>
               </div>
             ` : ``}
           </div>
@@ -808,42 +916,54 @@
     }
 
     /**********************
-     * BUTTON HANDLERS (+/-/edit)
+     * CLICK HANDLERS
      **********************/
     document.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-action][data-id]");
+      const btn = e.target.closest("button[data-action]");
       if(!btn) return;
 
       const action = btn.getAttribute("data-action");
-      const id = btn.getAttribute("data-id");
 
-      const idx = items.findIndex(x => x.id === id);
-      if(idx === -1) return;
+      // Variant +/- buttons
+      if(action === "incVar" || action === "decVar"){
+        const itemId = btn.getAttribute("data-item");
+        const varId = btn.getAttribute("data-var");
 
-      if(action === "inc"){
-        items[idx].packs = Number(items[idx].packs || 0) + 1;
+        const it = items.find(x => x.id === itemId);
+        if(!it) return;
+
+        const v = (it.variants || []).find(x => x.id === varId);
+        if(!v) return;
+
+        if(action === "incVar"){
+          v.packs = Number(v.packs || 0) + 1;
+        }else{
+          v.packs = Math.max(0, Number(v.packs || 0) - 1);
+        }
+
         saveItems(items);
         render();
         return;
       }
 
-      if(action === "dec"){
-        items[idx].packs = Math.max(0, Number(items[idx].packs || 0) - 1);
+      if(action === "setAllZero"){
+        const itemId = btn.getAttribute("data-item");
+        const it = items.find(x => x.id === itemId);
+        if(!it) return;
+
+        (it.variants || []).forEach(v => v.packs = 0);
         saveItems(items);
         render();
+        showToast("Set item to Empty");
         return;
       }
 
-      if(action === "quickEmpty"){
-        items[idx].packs = 0;
-        saveItems(items);
-        render();
-        showToast("Set to Empty");
+      if(action === "editItem"){
+        const itemId = btn.getAttribute("data-item");
+        const it = items.find(x => x.id === itemId);
+        if(!it) return;
+        openEditModal(it);
         return;
-      }
-
-      if(action === "edit"){
-        openEditModal(items[idx]);
       }
     });
 
@@ -854,7 +974,7 @@
      **********************/
     lowListModalEl.addEventListener("show.bs.modal", () => {
       const lowItems = items
-        .map(it => ({...it, status: getStatusFromPacks(it.packs)}))
+        .map(it => ({...it, total: getTotalPacks(it), status: getStatusFromTotal(getTotalPacks(it))}))
         .filter(it => it.status === "low" || it.status === "empty")
         .sort((a,b) => (a.category || "").localeCompare(b.category || "") || (a.en || "").localeCompare(b.en || ""));
 
@@ -885,11 +1005,12 @@
             <div class="d-grid gap-2">
               ${list.map(it => {
                 const meta = getStatusMeta(it.status);
+                const sizes = (it.variants || []).map(v => `${v.size}:${v.packs}`).join(" • ");
                 return `
                   <div class="d-flex justify-content-between align-items-center gap-2">
                     <div>
                       <div class="fw-bold">${escapeHtml(it.en)} <span class="text-muted">(${escapeHtml(it.ta)})</span></div>
-                      <div class="muted-note">Pack: ${escapeHtml(it.packSize)} • Packs left: ${Number(it.packs||0)}</div>
+                      <div class="muted-note">Total: ${it.total} packs • ${escapeHtml(sizes)}</div>
                     </div>
                     <span class="status-badge ${meta.cls}">${meta.label}</span>
                   </div>
@@ -905,7 +1026,7 @@
 
     document.getElementById("downloadLowListBtn").addEventListener("click", () => {
       const lowItems = items
-        .map(it => ({...it, status: getStatusFromPacks(it.packs)}))
+        .map(it => ({...it, total: getTotalPacks(it), status: getStatusFromTotal(getTotalPacks(it))}))
         .filter(it => it.status === "low" || it.status === "empty")
         .sort((a,b) => (a.category || "").localeCompare(b.category || "") || (a.en || "").localeCompare(b.en || ""));
 
@@ -924,7 +1045,8 @@
 
         list.forEach(it => {
           const st = it.status === "empty" ? "EMPTY" : "LOW";
-          lines.push(`- ${it.en} (${it.ta}) | Pack: ${it.packSize} | Left: ${it.packs} | ${st}`);
+          const sizes = (it.variants || []).map(v => `${v.size}:${v.packs}`).join(" | ");
+          lines.push(`- ${it.en} (${it.ta}) | Total: ${it.total} | ${sizes} | ${st}`);
         });
       });
 
@@ -944,7 +1066,6 @@
       a.remove();
 
       URL.revokeObjectURL(url);
-
       showToast("Low list downloaded");
     });
 
@@ -968,6 +1089,7 @@
         adminLoginModal.hide();
         setTimeout(() => adminPanelModal.show(), 200);
         showToast("Admin unlocked");
+        render();
       }else{
         showToast("Wrong PIN");
       }
@@ -986,19 +1108,22 @@
     });
 
     /**********************
-     * ADD/EDIT MODAL
+     * ADD/EDIT MODAL (ITEM + VARIANTS)
      **********************/
     function openAddModal(){
-      editingId = null;
+      editingItemId = null;
       itemModalTitle.textContent = "➕ Add Item";
       deleteItemBtn.classList.add("d-none");
 
       fCategory.value = "Masala";
       fEn.value = "";
       fTa.value = "";
-      fPackSize.value = "";
-      fPacks.value = 1;
 
+      editingVariants = [
+        { id: uid(), size: "100 g", packs: 1 }
+      ];
+
+      renderVariantEditor();
       itemModal.show();
       setTimeout(() => fEn.focus(), 250);
     }
@@ -1009,18 +1134,89 @@
         return;
       }
 
-      editingId = it.id;
+      editingItemId = it.id;
       itemModalTitle.textContent = "✏️ Edit Item";
       deleteItemBtn.classList.remove("d-none");
 
       fCategory.value = it.category || "Masala";
       fEn.value = it.en || "";
       fTa.value = it.ta || "";
-      fPackSize.value = it.packSize || "";
-      fPacks.value = Number(it.packs || 0);
 
+      editingVariants = (it.variants || []).map(v => ({
+        id: v.id || uid(),
+        size: v.size || "",
+        packs: Number(v.packs || 0)
+      }));
+
+      renderVariantEditor();
       itemModal.show();
     }
+
+    function renderVariantEditor(){
+      if(!Array.isArray(editingVariants)) editingVariants = [];
+
+      if(editingVariants.length === 0){
+        editingVariants.push({ id: uid(), size:"100 g", packs:1 });
+      }
+
+      variantEditorWrap.innerHTML = editingVariants.map((v, i) => `
+        <div class="soft-card p-3 mb-2" style="box-shadow: 0 10px 20px rgba(2,6,23,.06);">
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <div class="fw-bold">Pack Size #${i+1}</div>
+            <button type="button" class="btn btn-outline-dark btn-mini" data-action="removeVarEditor" data-var="${v.id}">
+              🗑️ Remove
+            </button>
+          </div>
+
+          <div class="row g-2 mt-2">
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-bold">Variant Size</label>
+              <input class="form-control search-input" data-action="editVarSize" data-var="${v.id}" value="${escapeHtml(v.size)}" placeholder="Ex: 100 g / 200 g / 1 kg" />
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-bold">Packs</label>
+              <input type="number" min="0" class="form-control search-input" data-action="editVarPacks" data-var="${v.id}" value="${Number(v.packs||0)}" />
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    addVariantBtn.addEventListener("click", () => {
+      editingVariants.push({ id: uid(), size:"", packs: 0 });
+      renderVariantEditor();
+      showToast("Added pack size");
+    });
+
+    // Variant editor events
+    document.addEventListener("input", (e) => {
+      const el = e.target;
+      const action = el.getAttribute?.("data-action");
+      const varId = el.getAttribute?.("data-var");
+      if(!action || !varId) return;
+
+      const v = editingVariants.find(x => x.id === varId);
+      if(!v) return;
+
+      if(action === "editVarSize"){
+        v.size = el.value;
+      }
+
+      if(action === "editVarPacks"){
+        v.packs = Math.max(0, Number(el.value || 0));
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-action='removeVarEditor']");
+      if(!btn) return;
+
+      const varId = btn.getAttribute("data-var");
+      editingVariants = editingVariants.filter(x => x.id !== varId);
+      renderVariantEditor();
+      showToast("Removed pack size");
+    });
 
     /**********************
      * AUTO FILL (English <-> Tamil)
@@ -1029,13 +1225,10 @@
 
     fEn.addEventListener("input", () => {
       if(lockAutoFill) return;
-
       const key = normalizeKey(fEn.value);
       if(!key) return;
 
-      // Try exact match or partial
-      const ta = DICT_EN_TO_TA[key] || DICT_EN_TO_TA[key.replace(/ powder$/, "")];
-
+      const ta = DICT_EN_TO_TA[key];
       if(ta && (!fTa.value || fTa.value.trim().length < 2)){
         lockAutoFill = true;
         fTa.value = ta;
@@ -1045,7 +1238,6 @@
 
     fTa.addEventListener("input", () => {
       if(lockAutoFill) return;
-
       const ta = (fTa.value || "").trim();
       if(!ta) return;
 
@@ -1058,7 +1250,7 @@
     });
 
     /**********************
-     * SAVE ITEM
+     * SAVE / DELETE ITEM
      **********************/
     saveItemBtn.addEventListener("click", () => {
       if(!isAdminUnlocked()){
@@ -1066,23 +1258,39 @@
         return;
       }
 
-      const obj = {
-        category: (fCategory.value || "Masala").trim(),
-        en: (fEn.value || "").trim(),
-        ta: (fTa.value || "").trim(),
-        packSize: (fPackSize.value || "").trim(),
-        packs: Math.max(0, Number(fPacks.value || 0))
-      };
+      const category = (fCategory.value || "").trim();
+      const en = (fEn.value || "").trim();
+      const ta = (fTa.value || "").trim();
 
-      if(!obj.en || !obj.ta || !obj.packSize){
-        showToast("Fill English + Tamil + Pack Size");
+      const variants = (editingVariants || [])
+        .map(v => ({
+          id: v.id || uid(),
+          size: (v.size || "").trim(),
+          packs: Math.max(0, Number(v.packs || 0))
+        }))
+        .filter(v => v.size);
+
+      if(!category || !en || !ta){
+        showToast("Fill Category + English + Tamil");
         return;
       }
 
-      if(editingId){
-        const idx = items.findIndex(x => x.id === editingId);
+      if(variants.length === 0){
+        showToast("Add at least 1 pack size");
+        return;
+      }
+
+      const obj = {
+        category,
+        en,
+        ta,
+        variants
+      };
+
+      if(editingItemId){
+        const idx = items.findIndex(x => x.id === editingItemId);
         if(idx !== -1){
-          items[idx] = {...items[idx], ...obj};
+          items[idx] = { ...items[idx], ...obj };
         }
       }else{
         items.unshift({ id: uid(), ...obj });
@@ -1095,10 +1303,8 @@
     });
 
     deleteItemBtn.addEventListener("click", () => {
-      if(!editingId) return;
-
-      // No confirm popup (simple)
-      items = items.filter(x => x.id !== editingId);
+      if(!editingItemId) return;
+      items = items.filter(x => x.id !== editingItemId);
       saveItems(items);
       itemModal.hide();
       render();
@@ -1106,7 +1312,7 @@
     });
 
     /**********************
-     * CSV EXPORT
+     * CSV EXPORT (VARIANT ROWS)
      **********************/
     exportCsvBtn.addEventListener("click", () => {
       if(!isAdminUnlocked()){
@@ -1115,17 +1321,19 @@
       }
 
       const rows = [];
-      rows.push(["category","en","ta","packSize","packs"].join(","));
+      rows.push(["category","en","ta","variantSize","packs"].join(","));
 
       items.forEach(it => {
-        const r = [
-          csvEscape(it.category),
-          csvEscape(it.en),
-          csvEscape(it.ta),
-          csvEscape(it.packSize),
-          csvEscape(String(Number(it.packs || 0)))
-        ];
-        rows.push(r.join(","));
+        (it.variants || []).forEach(v => {
+          const r = [
+            csvEscape(it.category),
+            csvEscape(it.en),
+            csvEscape(it.ta),
+            csvEscape(v.size),
+            csvEscape(String(Number(v.packs || 0)))
+          ];
+          rows.push(r.join(","));
+        });
       });
 
       const blob = new Blob([rows.join("\n")], {type:"text/csv;charset=utf-8"});
@@ -1151,7 +1359,7 @@
     }
 
     /**********************
-     * CSV IMPORT
+     * CSV IMPORT (MERGE INTO GROUPED ITEMS)
      **********************/
     csvFileInput.addEventListener("change", async (e) => {
       if(!isAdminUnlocked()){
@@ -1175,15 +1383,15 @@
         const idxCategory = header.indexOf("category");
         const idxEn = header.indexOf("en");
         const idxTa = header.indexOf("ta");
-        const idxPackSize = header.indexOf("packsize");
+        const idxSize = header.indexOf("variantsize");
         const idxPacks = header.indexOf("packs");
 
-        if([idxCategory, idxEn, idxTa, idxPackSize, idxPacks].some(i => i === -1)){
+        if([idxCategory, idxEn, idxTa, idxSize, idxPacks].some(i => i === -1)){
           showToast("CSV missing columns");
           return;
         }
 
-        const newItems = [];
+        const map = new Map(); // key => item
 
         for(let i=1; i<parsed.length; i++){
           const row = parsed[i];
@@ -1192,27 +1400,53 @@
           const category = (row[idxCategory] || "").trim();
           const en = (row[idxEn] || "").trim();
           const ta = (row[idxTa] || "").trim();
-          const packSize = (row[idxPackSize] || "").trim();
+          const size = (row[idxSize] || "").trim();
           const packs = Math.max(0, Number((row[idxPacks] || "0").toString().trim()));
 
-          if(!category || !en || !ta || !packSize) continue;
+          if(!category || !en || !ta || !size) continue;
 
-          newItems.push({
+          const key = normalize(`${category}||${en}||${ta}`);
+
+          if(!map.has(key)){
+            map.set(key, {
+              id: uid(),
+              category,
+              en,
+              ta,
+              variants:[]
+            });
+          }
+
+          map.get(key).variants.push({
             id: uid(),
-            category,
-            en,
-            ta,
-            packSize,
+            size,
             packs: isNaN(packs) ? 0 : packs
           });
         }
+
+        const newItems = Array.from(map.values()).map(it => {
+          // Merge duplicate sizes inside same item
+          const sizeMap = new Map();
+          it.variants.forEach(v => {
+            const k = normalize(v.size);
+            if(!sizeMap.has(k)){
+              sizeMap.set(k, { ...v });
+            }else{
+              sizeMap.get(k).packs += Number(v.packs||0);
+            }
+          });
+
+          it.variants = Array.from(sizeMap.values())
+            .sort((a,b) => (a.size || "").localeCompare(b.size || ""));
+
+          return it;
+        });
 
         if(newItems.length === 0){
           showToast("No valid rows in CSV");
           return;
         }
 
-        // Replace list
         items = newItems;
         saveItems(items);
         render();
@@ -1272,8 +1506,8 @@
     /**********************
      * START
      **********************/
+    ensureCategoriesInSelect();
     render();
   </script>
 </body>
 </html>
-
