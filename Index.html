@@ -1,0 +1,1278 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Vasantha’s Grocery Basket</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <style>
+    :root{
+      /* Pro + high contrast */
+      --bg:#f3f5f8;
+      --card:#ffffff;
+      --ink:#0b1220;
+      --muted:#4b5563;
+
+      --brand:#1d4ed8;       /* deep blue */
+      --brandDark:#163ea8;
+
+      --line:rgba(11,18,32,.12);
+      --shadow:0 18px 50px rgba(2,6,23,.10);
+
+      /* status */
+      --ok-bg:#e7f8ef;
+      --ok-ink:#0f5132;
+
+      --low-bg:#fff4d6;
+      --low-ink:#7a4a00;
+
+      --empty-bg:#ffe2e2;
+      --empty-ink:#7f1d1d;
+
+      --chip-bg:#eef2f7;
+      --chip-ink:#1f2937;
+
+      --radius:18px;
+    }
+
+    body{
+      background: var(--bg);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--ink);
+    }
+
+    /* Header */
+    .app-header{
+      background: linear-gradient(90deg, #0b1220, #111c33);
+      color:#fff;
+      border-bottom-left-radius: 22px;
+      border-bottom-right-radius: 22px;
+      box-shadow: 0 18px 60px rgba(2,6,23,.30);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .app-title{
+      font-weight: 950;
+      margin: 0;
+      font-size: 1.35rem;
+      line-height: 1.2;
+      letter-spacing: .2px;
+    }
+
+    .app-sub{
+      opacity: .92;
+      margin: 0;
+      margin-top: 6px;
+      font-weight: 700;
+      font-size: 1.02rem;
+    }
+
+    /* Inputs */
+    .search-input{
+      border-radius: var(--radius);
+      padding: 16px 16px;
+      font-size: 1.12rem;
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 18px rgba(2,6,23,.04);
+    }
+
+    /* Cards */
+    .soft-card{
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .item-title{
+      font-weight: 950;
+      font-size: 1.15rem;
+      line-height: 1.15;
+      margin: 0;
+    }
+
+    .item-sub{
+      margin: 0;
+      margin-top: 6px;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    /* Status badge */
+    .status-badge{
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-weight: 950;
+      font-size: 1rem;
+      border: 1px solid rgba(0,0,0,.04);
+      white-space: nowrap;
+    }
+    .st-ok{ background: var(--ok-bg); color: var(--ok-ink); }
+    .st-low{ background: var(--low-bg); color: var(--low-ink); }
+    .st-empty{ background: var(--empty-bg); color: var(--empty-ink); }
+
+    /* Chips */
+    .meta-row{
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .meta-chip{
+      background: var(--chip-bg);
+      color: var(--chip-ink);
+      border: 1px solid rgba(11,18,32,.10);
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+
+    /* Pack controls */
+    .pack-controls{
+      display: grid;
+      grid-template-columns: 62px 1fr 62px;
+      gap: 12px;
+      margin-top: 14px;
+      align-items: center;
+    }
+
+    .btn-pack{
+      border-radius: 18px;
+      font-weight: 950;
+      font-size: 1.35rem;
+      padding: 12px 0;
+      border: 1px solid rgba(11,18,32,.14);
+      background: #fff;
+      box-shadow: 0 12px 20px rgba(2,6,23,.08);
+    }
+    .btn-pack:active{ transform: scale(.98); }
+
+    .btn-minus{ color: #7f1d1d; }
+    .btn-plus{ color: #0f5132; }
+
+    .pack-count{
+      text-align: center;
+      border-radius: 18px;
+      border: 1px solid rgba(11,18,32,.14);
+      padding: 12px 10px;
+      font-weight: 950;
+      font-size: 1.25rem;
+      background: #fff;
+    }
+
+    /* Footer */
+    .footer-bar{
+      position: sticky;
+      bottom: 0;
+      z-index: 60;
+      background: rgba(243,245,248,.92);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(11,18,32,.10);
+      padding: 12px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+
+    .btn-soft{
+      border-radius: 16px;
+      font-weight: 950;
+      padding: 14px 16px;
+      font-size: 1.05rem;
+    }
+
+    .btn-brand{
+      background: linear-gradient(90deg, var(--brand), #2563eb);
+      color: #fff;
+      border: 0;
+      box-shadow: 0 18px 30px rgba(29,78,216,.18);
+    }
+    .btn-brand:hover{ background: linear-gradient(90deg, var(--brandDark), var(--brand)); color:#fff; }
+
+    .btn-outline-brand{
+      border: 2px solid rgba(29,78,216,.45);
+      color: var(--brand);
+      background: #fff;
+    }
+    .btn-outline-brand:hover{
+      background: rgba(29,78,216,.06);
+      color: var(--brand);
+    }
+
+    .muted-note{
+      color: var(--muted);
+      font-size: 1.02rem;
+      font-weight: 750;
+    }
+
+    /* Accordion */
+    .accordion-button{
+      border-radius: var(--radius) !important;
+      font-weight: 950;
+      padding: 18px 16px;
+      font-size: 1.05rem;
+    }
+
+    .accordion-item{
+      border: 0;
+      margin-bottom: 14px;
+      background: transparent;
+    }
+
+    .accordion-button:not(.collapsed){
+      background: #fff;
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(11,18,32,.10);
+    }
+
+    .accordion-button.collapsed{
+      background: #fff;
+      border: 1px solid rgba(11,18,32,.10);
+      box-shadow: 0 10px 20px rgba(2,6,23,.06);
+    }
+
+    .accordion-body{
+      padding: 12px 0 0 0;
+    }
+
+    /* Admin buttons */
+    .admin-actions{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn-mini{
+      border-radius: 14px;
+      font-weight: 950;
+      padding: 12px 12px;
+    }
+
+    .divider{
+      height: 1px;
+      background: rgba(11,18,32,.12);
+      margin: 14px 0;
+    }
+
+    /* Bigger touch targets */
+    button, .accordion-button { -webkit-tap-highlight-color: transparent; }
+
+    @media (orientation: landscape){
+      .pack-controls{ grid-template-columns: 70px 1fr 70px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header px-3 pt-3 pb-3">
+    <div class="container" style="max-width: 920px;">
+      <div class="d-flex align-items-start justify-content-between gap-2">
+        <div>
+          <h1 class="app-title">🧺 Vasantha’s Grocery Basket</h1>
+          <p class="app-sub">Easy for eyes • தமிழ் + English • Auto saved</p>
+        </div>
+
+        <button class="btn btn-light btn-soft px-3" id="adminBtn" style="font-weight:950;">
+          ⚙️
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container py-3" style="max-width: 920px; padding-bottom: 90px;">
+    <div class="mb-3">
+      <input id="searchBox" class="form-control search-input"
+             type="text"
+             placeholder="Search / தேடல் (ex: Jeera, முந்திரி, Oats)" />
+      <div class="mt-2 muted-note">
+        Packs rule: 3+ = Available | 1–2 = Low | 0 = Empty
+      </div>
+    </div>
+
+    <div class="accordion" id="categoryAccordion"></div>
+
+    <div class="mt-4 text-center muted-note">
+      Saved automatically on this phone.
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div class="footer-bar">
+    <div class="container" style="max-width: 920px;">
+      <div class="d-grid">
+        <button class="btn btn-brand btn-soft" data-bs-toggle="modal" data-bs-target="#lowListModal">
+          🛒 Low List (Low + Empty)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 9999;">
+    <div id="appToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true"
+         style="border-radius: 16px; box-shadow: 0 18px 40px rgba(2,6,23,.18);">
+      <div class="d-flex">
+        <div class="toast-body fw-bold" id="toastMsg">Done</div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOW LIST MODAL -->
+  <div class="modal fade" id="lowListModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content" style="border-radius: 18px;">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">🛒 Low List (Buy Now)</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="muted-note mb-3">
+            Only items that are Low or Empty will show here.
+          </div>
+          <div id="lowListWrap"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-brand btn-soft" id="downloadLowListBtn">
+            📄 Download .txt
+          </button>
+          <button class="btn btn-brand btn-soft" data-bs-dismiss="modal">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN LOGIN MODAL -->
+  <div class="modal fade" id="adminLoginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="border-radius: 18px;">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">🔐 Admin Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="muted-note mb-2">Enter PIN to manage items.</div>
+          <input id="pinInput" type="password" class="form-control search-input" placeholder="Enter PIN (default: 1234)" />
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-brand btn-soft" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-brand btn-soft" id="pinSubmitBtn">Unlock</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL MODAL -->
+  <div class="modal fade" id="adminPanelModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content" style="border-radius: 18px;">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">⚙️ Admin Panel</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="soft-card p-3">
+            <div class="row g-2">
+              <div class="col-12 col-md-6">
+                <button class="btn btn-brand btn-soft w-100" id="openAddItemBtn">
+                  ➕ Add Item
+                </button>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <button class="btn btn-outline-brand btn-soft w-100" id="exportCsvBtn">
+                  📤 Export CSV (Backup)
+                </button>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <label class="btn btn-outline-brand btn-soft w-100 mb-0">
+                  📥 Import CSV (Excel)
+                  <input type="file" id="csvFileInput" accept=".csv" hidden>
+                </label>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <button class="btn btn-outline-dark btn-soft w-100" id="logoutAdminBtn">
+                  🔒 Logout Admin
+                </button>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="muted-note">
+              CSV columns required: <b>category,en,ta,packSize,packs</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-brand btn-soft" data-bs-dismiss="modal">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT ITEM MODAL -->
+  <div class="modal fade" id="itemModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content" style="border-radius: 18px;">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="itemModalTitle">➕ Add Item</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label fw-bold">Category</label>
+              <select id="fCategory" class="form-select search-input">
+                <option value="Masala">Masala</option>
+                <option value="Dry Fruits">Dry Fruits</option>
+                <option value="Cereals">Cereals</option>
+                <option value="Tea/Coffee">Tea/Coffee</option>
+                <option value="Basics">Basics</option>
+              </select>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-bold">English Name</label>
+              <input id="fEn" class="form-control search-input" placeholder="Ex: Jeera (Cumin)" />
+              <div class="muted-note mt-2">
+                Tip: If it matches dictionary, Tamil auto fills.
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-bold">Tamil Name</label>
+              <input id="fTa" class="form-control search-input" placeholder="Ex: சீரகம்" />
+              <div class="muted-note mt-2">
+                Tip: If it matches dictionary, English auto fills.
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-bold">Pack Size</label>
+              <input id="fPackSize" class="form-control search-input" placeholder="Ex: 1 kg / 250 g / 500 ml" />
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-bold">Pack Count</label>
+              <input id="fPacks" type="number" min="0" class="form-control search-input" placeholder="Ex: 5" />
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="muted-note">
+            Pack Size is fixed. Only Pack Count changes daily.
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline-dark btn-soft me-auto d-none" id="deleteItemBtn">
+            🗑️ Delete
+          </button>
+
+          <button class="btn btn-outline-brand btn-soft" data-bs-dismiss="modal">
+            Cancel
+          </button>
+
+          <button class="btn btn-brand btn-soft" id="saveItemBtn">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /**********************
+     * STORAGE
+     **********************/
+    const STORAGE_KEY_ITEMS = "vasantha_basket_items_pro_v1";
+    const STORAGE_KEY_ADMIN = "vasantha_basket_admin_unlocked_v1";
+    const ADMIN_PIN = "1234";
+
+    function uid(){
+      return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+    }
+
+    /**********************
+     * OFFLINE DICTIONARY (English <-> Tamil)
+     * Add more anytime
+     **********************/
+    const DICT_EN_TO_TA = {
+      "salt":"உப்பு",
+      "jaggery":"வெல்லம்",
+      "jeera":"சீரகம்",
+      "cumin":"சீரகம்",
+      "pepper":"மிளகு",
+      "turmeric":"மஞ்சள் தூள்",
+      "chilli powder":"மிளகாய் தூள்",
+      "chili powder":"மிளகாய் தூள்",
+      "coriander powder":"கொத்தமல்லி தூள்",
+      "mustard":"கடுகு",
+      "mustard seeds":"கடுகு",
+      "cashew":"முந்திரி",
+      "almond":"பாதாம்",
+      "kishmish":"உலர் திராட்சை",
+      "raisins":"உலர் திராட்சை",
+      "oats":"ஓட்ஸ்",
+      "rava":"ரவை",
+      "poha":"அவல்",
+      "aval":"அவல்",
+      "tea powder":"தேயிலை தூள்",
+      "coffee powder":"காபி தூள்",
+      "corn flakes":"கார்ன் ஃப்ளேக்ஸ்"
+    };
+
+    // Reverse map
+    const DICT_TA_TO_EN = {};
+    Object.keys(DICT_EN_TO_TA).forEach(en => {
+      const ta = DICT_EN_TO_TA[en];
+      // keep first english key only
+      if(!DICT_TA_TO_EN[ta]) DICT_TA_TO_EN[ta] = en;
+    });
+
+    function normalizeKey(s){
+      return (s || "")
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .replace(/\(.*?\)/g, "") // remove brackets like (Cumin)
+        .trim();
+    }
+
+    /**********************
+     * STATUS
+     **********************/
+    function getStatusFromPacks(packs){
+      packs = Number(packs || 0);
+      if(packs <= 0) return "empty";
+      if(packs <= 2) return "low";
+      return "available";
+    }
+
+    function getStatusMeta(st){
+      if(st === "available") return { cls:"st-ok", label:"Available • உள்ளது" };
+      if(st === "low") return { cls:"st-low", label:"Low • குறைவு" };
+      return { cls:"st-empty", label:"Empty • காலி" };
+    }
+
+    /**********************
+     * DEFAULT ITEMS
+     **********************/
+    const DEFAULT_ITEMS = [
+      { id: uid(), category:"Basics", en:"Salt", ta:"உப்பு", packSize:"1 kg", packs:5 },
+      { id: uid(), category:"Masala", en:"Jeera (Cumin)", ta:"சீரகம்", packSize:"100 g", packs:2 },
+      { id: uid(), category:"Dry Fruits", en:"Cashew", ta:"முந்திரி", packSize:"250 g", packs:2 },
+      { id: uid(), category:"Cereals", en:"Oats", ta:"ஓட்ஸ்", packSize:"1 kg", packs:1 }
+    ];
+
+    function loadItems(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY_ITEMS);
+        if(!raw){
+          localStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(DEFAULT_ITEMS));
+          return structuredClone(DEFAULT_ITEMS);
+        }
+        return JSON.parse(raw) || [];
+      }catch(e){
+        localStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(DEFAULT_ITEMS));
+        return structuredClone(DEFAULT_ITEMS);
+      }
+    }
+
+    function saveItems(items){
+      localStorage.setItem(STORAGE_KEY_ITEMS, JSON.stringify(items));
+    }
+
+    function isAdminUnlocked(){
+      return localStorage.getItem(STORAGE_KEY_ADMIN) === "1";
+    }
+
+    function setAdminUnlocked(val){
+      localStorage.setItem(STORAGE_KEY_ADMIN, val ? "1" : "0");
+    }
+
+    let items = loadItems();
+
+    /**********************
+     * ELEMENTS
+     **********************/
+    const searchBox = document.getElementById("searchBox");
+    const accordion = document.getElementById("categoryAccordion");
+
+    const lowListWrap = document.getElementById("lowListWrap");
+    const lowListModalEl = document.getElementById("lowListModal");
+
+    const adminBtn = document.getElementById("adminBtn");
+    const adminLoginModal = new bootstrap.Modal(document.getElementById("adminLoginModal"));
+    const adminPanelModal = new bootstrap.Modal(document.getElementById("adminPanelModal"));
+    const itemModal = new bootstrap.Modal(document.getElementById("itemModal"));
+
+    const pinInput = document.getElementById("pinInput");
+    const pinSubmitBtn = document.getElementById("pinSubmitBtn");
+
+    const openAddItemBtn = document.getElementById("openAddItemBtn");
+    const exportCsvBtn = document.getElementById("exportCsvBtn");
+    const csvFileInput = document.getElementById("csvFileInput");
+    const logoutAdminBtn = document.getElementById("logoutAdminBtn");
+
+    const itemModalTitle = document.getElementById("itemModalTitle");
+    const deleteItemBtn = document.getElementById("deleteItemBtn");
+    const saveItemBtn = document.getElementById("saveItemBtn");
+
+    const fCategory = document.getElementById("fCategory");
+    const fEn = document.getElementById("fEn");
+    const fTa = document.getElementById("fTa");
+    const fPackSize = document.getElementById("fPackSize");
+    const fPacks = document.getElementById("fPacks");
+
+    const toastEl = document.getElementById("appToast");
+    const toastMsg = document.getElementById("toastMsg");
+    const toast = new bootstrap.Toast(toastEl, { delay: 2200 });
+
+    let editingId = null;
+
+    const CATEGORY_ORDER = ["Masala", "Dry Fruits", "Cereals", "Tea/Coffee", "Basics"];
+
+    /**********************
+     * TOAST
+     **********************/
+    function showToast(msg){
+      toastMsg.textContent = msg;
+      toast.show();
+    }
+
+    /**********************
+     * HELPERS
+     **********************/
+    function normalize(str){
+      return (str || "").toString().trim().toLowerCase();
+    }
+
+    function escapeHtml(s){
+      return (s || "").replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    function getFilteredItems(){
+      const q = normalize(searchBox.value);
+      if(!q) return items;
+
+      return items.filter(it => {
+        const hay = normalize(`${it.category} ${it.en} ${it.ta} ${it.packSize}`);
+        return hay.includes(q);
+      });
+    }
+
+    /**********************
+     * RENDER
+     **********************/
+    function render(){
+      const filtered = getFilteredItems();
+
+      const groups = {};
+      CATEGORY_ORDER.forEach(c => groups[c] = []);
+      filtered.forEach(it => {
+        if(!groups[it.category]) groups[it.category] = [];
+        groups[it.category].push(it);
+      });
+
+      accordion.innerHTML = "";
+
+      CATEGORY_ORDER.forEach((cat, idx) => {
+        const list = groups[cat] || [];
+        if(list.length === 0) return;
+
+        const catId = "cat_" + cat.replace(/\W+/g, "_");
+        const isFirst = idx === 0;
+
+        let lowCount = 0;
+        let emptyCount = 0;
+
+        list.forEach(it => {
+          const st = getStatusFromPacks(it.packs);
+          if(st === "low") lowCount++;
+          if(st === "empty") emptyCount++;
+        });
+
+        const badge =
+          emptyCount > 0 ? `<span class="status-badge st-empty">🔴 ${emptyCount} Empty</span>` :
+          lowCount > 0 ? `<span class="status-badge st-low">🟡 ${lowCount} Low</span>` :
+          `<span class="status-badge st-ok">🟢 OK</span>`;
+
+        const itemsHtml = list
+          .sort((a,b) => (a.en || "").localeCompare(b.en || ""))
+          .map(it => renderItemCard(it))
+          .join("");
+
+        accordion.insertAdjacentHTML("beforeend", `
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button ${isFirst ? "" : "collapsed"}"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#${catId}_body"
+                      aria-expanded="${isFirst ? "true" : "false"}">
+                <div class="d-flex w-100 align-items-center justify-content-between gap-2">
+                  <div style="font-weight:950;">${escapeHtml(cat)}</div>
+                  <div>${badge}</div>
+                </div>
+              </button>
+            </h2>
+
+            <div id="${catId}_body"
+                 class="accordion-collapse collapse ${isFirst ? "show" : ""}"
+                 data-bs-parent="#categoryAccordion">
+              <div class="accordion-body">
+                <div class="row g-3">
+                  ${itemsHtml}
+                </div>
+              </div>
+            </div>
+          </div>
+        `);
+      });
+
+      if(accordion.innerHTML.trim() === ""){
+        accordion.innerHTML = `
+          <div class="soft-card p-4 text-center">
+            <div class="fw-bold fs-5">No items found</div>
+            <div class="muted-note mt-2">Try different search / வேறு தேடல் முயற்சி செய்யவும்</div>
+          </div>
+        `;
+      }
+    }
+
+    function renderItemCard(it){
+      const packs = Number(it.packs || 0);
+      const st = getStatusFromPacks(packs);
+      const meta = getStatusMeta(st);
+      const admin = isAdminUnlocked();
+
+      return `
+        <div class="col-12 col-md-6">
+          <div class="soft-card p-3">
+            <div class="d-flex align-items-start justify-content-between gap-2">
+              <div>
+                <p class="item-title">${escapeHtml(it.en || "")}</p>
+                <p class="item-sub">${escapeHtml(it.ta || "")}</p>
+              </div>
+              <span class="status-badge ${meta.cls}">${meta.label}</span>
+            </div>
+
+            <div class="meta-row">
+              <span class="meta-chip">📦 Pack: ${escapeHtml(it.packSize || "-")}</span>
+              <span class="meta-chip">🧾 Packs: ${packs}</span>
+            </div>
+
+            <div class="pack-controls">
+              <button class="btn-pack btn-minus" data-action="dec" data-id="${it.id}">−</button>
+              <div class="pack-count">${packs}</div>
+              <button class="btn-pack btn-plus" data-action="inc" data-id="${it.id}">+</button>
+            </div>
+
+            ${admin ? `
+              <div class="admin-actions">
+                <button class="btn btn-outline-brand btn-mini" data-action="edit" data-id="${it.id}">✏️ Edit</button>
+                <button class="btn btn-outline-dark btn-mini" data-action="quickEmpty" data-id="${it.id}">Set 0</button>
+              </div>
+            ` : ``}
+          </div>
+        </div>
+      `;
+    }
+
+    /**********************
+     * BUTTON HANDLERS (+/-/edit)
+     **********************/
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-action][data-id]");
+      if(!btn) return;
+
+      const action = btn.getAttribute("data-action");
+      const id = btn.getAttribute("data-id");
+
+      const idx = items.findIndex(x => x.id === id);
+      if(idx === -1) return;
+
+      if(action === "inc"){
+        items[idx].packs = Number(items[idx].packs || 0) + 1;
+        saveItems(items);
+        render();
+        return;
+      }
+
+      if(action === "dec"){
+        items[idx].packs = Math.max(0, Number(items[idx].packs || 0) - 1);
+        saveItems(items);
+        render();
+        return;
+      }
+
+      if(action === "quickEmpty"){
+        items[idx].packs = 0;
+        saveItems(items);
+        render();
+        showToast("Set to Empty");
+        return;
+      }
+
+      if(action === "edit"){
+        openEditModal(items[idx]);
+      }
+    });
+
+    searchBox.addEventListener("input", () => render());
+
+    /**********************
+     * LOW LIST MODAL
+     **********************/
+    lowListModalEl.addEventListener("show.bs.modal", () => {
+      const lowItems = items
+        .map(it => ({...it, status: getStatusFromPacks(it.packs)}))
+        .filter(it => it.status === "low" || it.status === "empty")
+        .sort((a,b) => (a.category || "").localeCompare(b.category || "") || (a.en || "").localeCompare(b.en || ""));
+
+      if(lowItems.length === 0){
+        lowListWrap.innerHTML = `
+          <div class="soft-card p-4 text-center">
+            <div class="fw-bold fs-5">All items are OK ✅</div>
+            <div class="muted-note mt-2">Nothing to buy now.</div>
+          </div>
+        `;
+        return;
+      }
+
+      const group = {};
+      lowItems.forEach(it => {
+        if(!group[it.category]) group[it.category] = [];
+        group[it.category].push(it);
+      });
+
+      let html = "";
+      CATEGORY_ORDER.forEach(cat => {
+        const list = group[cat];
+        if(!list || list.length === 0) return;
+
+        html += `
+          <div class="soft-card p-3 mb-3">
+            <div class="fw-bold fs-5 mb-2">${escapeHtml(cat)}</div>
+            <div class="d-grid gap-2">
+              ${list.map(it => {
+                const meta = getStatusMeta(it.status);
+                return `
+                  <div class="d-flex justify-content-between align-items-center gap-2">
+                    <div>
+                      <div class="fw-bold">${escapeHtml(it.en)} <span class="text-muted">(${escapeHtml(it.ta)})</span></div>
+                      <div class="muted-note">Pack: ${escapeHtml(it.packSize)} • Packs left: ${Number(it.packs||0)}</div>
+                    </div>
+                    <span class="status-badge ${meta.cls}">${meta.label}</span>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
+      });
+
+      lowListWrap.innerHTML = html;
+    });
+
+    document.getElementById("downloadLowListBtn").addEventListener("click", () => {
+      const lowItems = items
+        .map(it => ({...it, status: getStatusFromPacks(it.packs)}))
+        .filter(it => it.status === "low" || it.status === "empty")
+        .sort((a,b) => (a.category || "").localeCompare(b.category || "") || (a.en || "").localeCompare(b.en || ""));
+
+      const lines = [];
+      lines.push("Vasantha’s Grocery Basket - Low List");
+      lines.push("Generated: " + new Date().toLocaleString());
+      lines.push("================================================");
+
+      CATEGORY_ORDER.forEach(cat => {
+        const list = lowItems.filter(x => x.category === cat);
+        if(list.length === 0) return;
+
+        lines.push("");
+        lines.push(cat);
+        lines.push("----------------------------------------");
+
+        list.forEach(it => {
+          const st = it.status === "empty" ? "EMPTY" : "LOW";
+          lines.push(`- ${it.en} (${it.ta}) | Pack: ${it.packSize} | Left: ${it.packs} | ${st}`);
+        });
+      });
+
+      if(lowItems.length === 0){
+        lines.push("");
+        lines.push("All items are OK ✅");
+      }
+
+      const blob = new Blob([lines.join("\n")], {type:"text/plain;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "vasantha-low-list.txt";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      URL.revokeObjectURL(url);
+
+      showToast("Low list downloaded");
+    });
+
+    /**********************
+     * ADMIN FLOW
+     **********************/
+    adminBtn.addEventListener("click", () => {
+      if(isAdminUnlocked()){
+        adminPanelModal.show();
+      }else{
+        pinInput.value = "";
+        adminLoginModal.show();
+        setTimeout(() => pinInput.focus(), 250);
+      }
+    });
+
+    pinSubmitBtn.addEventListener("click", () => {
+      const pin = (pinInput.value || "").trim();
+      if(pin === ADMIN_PIN){
+        setAdminUnlocked(true);
+        adminLoginModal.hide();
+        setTimeout(() => adminPanelModal.show(), 200);
+        showToast("Admin unlocked");
+      }else{
+        showToast("Wrong PIN");
+      }
+    });
+
+    logoutAdminBtn.addEventListener("click", () => {
+      setAdminUnlocked(false);
+      adminPanelModal.hide();
+      showToast("Admin logged out");
+      render();
+    });
+
+    openAddItemBtn.addEventListener("click", () => {
+      adminPanelModal.hide();
+      setTimeout(() => openAddModal(), 200);
+    });
+
+    /**********************
+     * ADD/EDIT MODAL
+     **********************/
+    function openAddModal(){
+      editingId = null;
+      itemModalTitle.textContent = "➕ Add Item";
+      deleteItemBtn.classList.add("d-none");
+
+      fCategory.value = "Masala";
+      fEn.value = "";
+      fTa.value = "";
+      fPackSize.value = "";
+      fPacks.value = 1;
+
+      itemModal.show();
+      setTimeout(() => fEn.focus(), 250);
+    }
+
+    function openEditModal(it){
+      if(!isAdminUnlocked()){
+        showToast("Admin required");
+        return;
+      }
+
+      editingId = it.id;
+      itemModalTitle.textContent = "✏️ Edit Item";
+      deleteItemBtn.classList.remove("d-none");
+
+      fCategory.value = it.category || "Masala";
+      fEn.value = it.en || "";
+      fTa.value = it.ta || "";
+      fPackSize.value = it.packSize || "";
+      fPacks.value = Number(it.packs || 0);
+
+      itemModal.show();
+    }
+
+    /**********************
+     * AUTO FILL (English <-> Tamil)
+     **********************/
+    let lockAutoFill = false;
+
+    fEn.addEventListener("input", () => {
+      if(lockAutoFill) return;
+
+      const key = normalizeKey(fEn.value);
+      if(!key) return;
+
+      // Try exact match or partial
+      const ta = DICT_EN_TO_TA[key] || DICT_EN_TO_TA[key.replace(/ powder$/, "")];
+
+      if(ta && (!fTa.value || fTa.value.trim().length < 2)){
+        lockAutoFill = true;
+        fTa.value = ta;
+        lockAutoFill = false;
+      }
+    });
+
+    fTa.addEventListener("input", () => {
+      if(lockAutoFill) return;
+
+      const ta = (fTa.value || "").trim();
+      if(!ta) return;
+
+      const en = DICT_TA_TO_EN[ta];
+      if(en && (!fEn.value || fEn.value.trim().length < 2)){
+        lockAutoFill = true;
+        fEn.value = en.charAt(0).toUpperCase() + en.slice(1);
+        lockAutoFill = false;
+      }
+    });
+
+    /**********************
+     * SAVE ITEM
+     **********************/
+    saveItemBtn.addEventListener("click", () => {
+      if(!isAdminUnlocked()){
+        showToast("Admin required");
+        return;
+      }
+
+      const obj = {
+        category: (fCategory.value || "Masala").trim(),
+        en: (fEn.value || "").trim(),
+        ta: (fTa.value || "").trim(),
+        packSize: (fPackSize.value || "").trim(),
+        packs: Math.max(0, Number(fPacks.value || 0))
+      };
+
+      if(!obj.en || !obj.ta || !obj.packSize){
+        showToast("Fill English + Tamil + Pack Size");
+        return;
+      }
+
+      if(editingId){
+        const idx = items.findIndex(x => x.id === editingId);
+        if(idx !== -1){
+          items[idx] = {...items[idx], ...obj};
+        }
+      }else{
+        items.unshift({ id: uid(), ...obj });
+      }
+
+      saveItems(items);
+      itemModal.hide();
+      render();
+      showToast("Saved");
+    });
+
+    deleteItemBtn.addEventListener("click", () => {
+      if(!editingId) return;
+
+      // No confirm popup (simple)
+      items = items.filter(x => x.id !== editingId);
+      saveItems(items);
+      itemModal.hide();
+      render();
+      showToast("Deleted");
+    });
+
+    /**********************
+     * CSV EXPORT
+     **********************/
+    exportCsvBtn.addEventListener("click", () => {
+      if(!isAdminUnlocked()){
+        showToast("Admin required");
+        return;
+      }
+
+      const rows = [];
+      rows.push(["category","en","ta","packSize","packs"].join(","));
+
+      items.forEach(it => {
+        const r = [
+          csvEscape(it.category),
+          csvEscape(it.en),
+          csvEscape(it.ta),
+          csvEscape(it.packSize),
+          csvEscape(String(Number(it.packs || 0)))
+        ];
+        rows.push(r.join(","));
+      });
+
+      const blob = new Blob([rows.join("\n")], {type:"text/csv;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "vasantha-basket-items.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      URL.revokeObjectURL(url);
+      showToast("CSV exported");
+    });
+
+    function csvEscape(val){
+      const s = (val ?? "").toString();
+      if(/[",\n]/.test(s)){
+        return `"${s.replace(/"/g, '""')}"`;
+      }
+      return s;
+    }
+
+    /**********************
+     * CSV IMPORT
+     **********************/
+    csvFileInput.addEventListener("change", async (e) => {
+      if(!isAdminUnlocked()){
+        showToast("Admin required");
+        return;
+      }
+
+      const file = e.target.files?.[0];
+      if(!file) return;
+
+      try{
+        const text = await file.text();
+        const parsed = parseCSV(text);
+
+        const header = parsed[0]?.map(x => normalize(x));
+        if(!header || header.length < 5){
+          showToast("Invalid CSV header");
+          return;
+        }
+
+        const idxCategory = header.indexOf("category");
+        const idxEn = header.indexOf("en");
+        const idxTa = header.indexOf("ta");
+        const idxPackSize = header.indexOf("packsize");
+        const idxPacks = header.indexOf("packs");
+
+        if([idxCategory, idxEn, idxTa, idxPackSize, idxPacks].some(i => i === -1)){
+          showToast("CSV missing columns");
+          return;
+        }
+
+        const newItems = [];
+
+        for(let i=1; i<parsed.length; i++){
+          const row = parsed[i];
+          if(!row || row.length === 0) continue;
+
+          const category = (row[idxCategory] || "").trim();
+          const en = (row[idxEn] || "").trim();
+          const ta = (row[idxTa] || "").trim();
+          const packSize = (row[idxPackSize] || "").trim();
+          const packs = Math.max(0, Number((row[idxPacks] || "0").toString().trim()));
+
+          if(!category || !en || !ta || !packSize) continue;
+
+          newItems.push({
+            id: uid(),
+            category,
+            en,
+            ta,
+            packSize,
+            packs: isNaN(packs) ? 0 : packs
+          });
+        }
+
+        if(newItems.length === 0){
+          showToast("No valid rows in CSV");
+          return;
+        }
+
+        // Replace list
+        items = newItems;
+        saveItems(items);
+        render();
+        showToast("CSV imported successfully");
+
+      }catch(err){
+        showToast("CSV import failed");
+      }finally{
+        csvFileInput.value = "";
+      }
+    });
+
+    function parseCSV(text){
+      const rows = [];
+      let row = [];
+      let cur = "";
+      let inQuotes = false;
+
+      for(let i=0; i<text.length; i++){
+        const ch = text[i];
+        const next = text[i+1];
+
+        if(inQuotes){
+          if(ch === '"' && next === '"'){
+            cur += '"';
+            i++;
+          }else if(ch === '"'){
+            inQuotes = false;
+          }else{
+            cur += ch;
+          }
+        }else{
+          if(ch === '"'){
+            inQuotes = true;
+          }else if(ch === ','){
+            row.push(cur);
+            cur = "";
+          }else if(ch === '\n'){
+            row.push(cur);
+            rows.push(row);
+            row = [];
+            cur = "";
+          }else if(ch === '\r'){
+            // ignore
+          }else{
+            cur += ch;
+          }
+        }
+      }
+
+      row.push(cur);
+      rows.push(row);
+
+      return rows.filter(r => r.some(cell => (cell || "").trim() !== ""));
+    }
+
+    /**********************
+     * START
+     **********************/
+    render();
+  </script>
+</body>
+</html>
